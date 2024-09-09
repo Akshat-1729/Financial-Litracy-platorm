@@ -1,0 +1,9 @@
+.scrollable-right-menu {
+    max-height: 80vh;
+    overflow-y: scroll;
+  }
+  
+  /* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+  .scrollable-right-menu::-webkit-scrollbar {
+    display: none;
+  }

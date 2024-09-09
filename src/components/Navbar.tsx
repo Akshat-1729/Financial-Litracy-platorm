@@ -9,7 +9,7 @@ export const Navbar = () => {
       <div className="md:hidden lg:block w-[20%]">
         <Link href="/" className="font-bold text-xl text-blue-700">
           FinFlicks
-        </Link>
+      </Link>
       </div>
       <div className="hidden md:flex  w-[50%] text-sm items-center justify-between">
         <div className="flex gap-6 text-gray-600">
