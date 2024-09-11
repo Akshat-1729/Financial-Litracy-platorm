@@ -1,7 +1,15 @@
+import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-export const UserInfo = ({ userId }: { userId: string }) => {
+export const UserInfo = ({ user }: { user: User }) => {
+  const createdAt=new Date(user.createdAt)
+  const formatDate=createdAt.toLocaleDateString("en-IN",{
+    year:"numeric",
+    month:"long",
+    day:"2-digit"
+
+  })
   return (
     <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
       <div className="flex justify-between items-center font-medium">
@@ -12,39 +20,38 @@ export const UserInfo = ({ userId }: { userId: string }) => {
       </div>
       <div className="flex flex-col gap-4 text-gray-500">
         <div className="flex items-center gap-2">
-          <span className="text-xl">Akshat Kumar</span>
-          <span className="text-sm">@Akshat</span>
+          <span className="text-xl">{(user.name && user.surname)?user.name +" "+user.surname:user.username}</span>
+          <span className="text-sm">@{user.username}</span>
         </div>
         <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa illo
-          expedita similique temporibus error doloribus asperiores{" "}
+          {(user.description)?user.description:"Not much about the User"}
         </p>
-        <div className="flex items-center gap-2">
+        {user.city&&<div className="flex items-center gap-2">
           <Image src={"/map.png"} alt="" width={16} height={16} />
           <span>
-            Living in <b>India</b>
+            Living in <b>{user.city}</b>
           </span>
-        </div>
-        <div className="flex items-center gap-2">
+        </div>}
+        {user.school&&<div className="flex items-center gap-2">
           <Image src={"/school.png"} alt="" width={16} height={16} />
           <span>
-            Education from <b>KV</b>
+            Education from <b>{user.school}</b>
           </span>
-        </div>
-        <div className="flex items-center gap-2">
+        </div>}
+        {user.work&&<div className="flex items-center gap-2">
           <Image src={"/work.png"} alt="" width={16} height={16} />
           <span>
-            Works at <b>Forma.AI</b>
+            Works at <b>{user.work}</b>
           </span>
-        </div>
+        </div>}
         <div className="flex items-center justify-between">
-            <div className="flex gap-1 items-center">
+            {user.website&&<div className="flex gap-1 items-center">
             <Image src={"/link.png"} alt="" width={16} height={16} />
-            <Link href={'https://www.linkedin.com/in/akshat-kumar-209300203/'} className="text-blue-500 font-medium">akshat.in</Link>
-            </div>
+            <Link href={user.website} className="text-blue-500 font-medium">{user.website}</Link>
+            </div>}
             <div className="flex gap-1 items-center">
             <Image src={"/date.png"} alt="" width={16} height={16} />
-            <span>Joined November 2024</span>
+            <span>Joined {formatDate}</span>
             </div>
         </div>
         <button className="bg-blue-500 text-sm text-white rounded-md p-2">Follow</button>

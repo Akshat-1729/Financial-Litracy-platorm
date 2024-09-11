@@ -61,7 +61,7 @@ if(eventType==="user.created"){
                 id:evt.data.id,
                 username:JSON.parse(body).data.username,
                 avatar:JSON.parse(body).data.image_url || "/noAvatar.png",
-                cover:"/noCover.png"
+                cover:"/bg.jpg"
             }
         })
         return new Response("User has been created!",{status:200})
