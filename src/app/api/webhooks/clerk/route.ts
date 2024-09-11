@@ -73,5 +73,27 @@ if(eventType==="user.created"){
     }
 }
 
-  return new Response('', { status: 200 })
+if(eventType==="user.updated"){
+    try {
+        await prisma.user.update({
+            where:{
+                id:evt.data.id
+            },
+            data:{
+                
+                username:JSON.parse(body).data.username,
+                avatar:JSON.parse(body).data.image_url || "/noAvatar.png",
+                
+            }
+        })
+        return new Response("User has been created!",{status:200})
+    } catch (err) {
+
+        console.log(err)
+        return new Response("Failed to create user!",{status:500})
+
+    }
+}
+
+  return new Response('webhook received', { status: 200 })
 }
