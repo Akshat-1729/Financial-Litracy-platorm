@@ -26,7 +26,7 @@ model User {
   work        String?
   website     String?
   createdAt   DateTime  @default(now())
-  coins       Int 
+  coins       Int?
   
   posts       Post[]
   likes       Like[]
