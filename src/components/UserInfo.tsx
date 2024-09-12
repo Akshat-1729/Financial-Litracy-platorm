@@ -1,8 +1,10 @@
+import { prisma } from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-export const UserInfo = ({ user }: { user: User }) => {
+export const UserInfo = async({ user }: { user: User }) => {
   const createdAt=new Date(user.createdAt)
   const formatDate=createdAt.toLocaleDateString("en-IN",{
     year:"numeric",
@@ -10,6 +12,25 @@ export const UserInfo = ({ user }: { user: User }) => {
     day:"2-digit"
 
   })
+  let isFollowing=false
+  let isFollowingSent=false
+  const {userId:currentUserId}=auth()
+  if(currentUserId){
+    const followres=await prisma.follower.findFirst({
+      where:{
+        followerId:currentUserId,
+        followingId:user.id,
+      }
+    })
+    followres?(isFollowing=true):(isFollowing=false)
+    const followReqres=await prisma.followRequest.findFirst({
+      where:{
+        senderId:currentUserId,
+        receiverId:user.id,
+      }
+    })
+    followReqres?(isFollowingSent=true):(isFollowingSent=false)
+  }
   return (
     <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
       <div className="flex justify-between items-center font-medium">
