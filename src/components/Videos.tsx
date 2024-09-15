@@ -11,17 +11,37 @@ interface Video {
   description: string;
   url: string;
 }
-
+const getEmbedUrl = (url: string) => {
+    const videoId = url.split("v=")[1];
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
 const Videos: React.FC<{ videos: Video[] }> = ({ videos }) => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [expandedVideo, setExpandedVideo] = useState<string | null>(null);
 
   const handleVideoClick = (video: Video) => {
-    setSelectedVideo(video);
+      setSelectedVideo(video);
   };
 
   const closeModal = () => {
     setSelectedVideo(null);
   };
+
+  const toggleDescription = (videoId: string) => {
+    
+    setExpandedVideo(expandedVideo === videoId ? null : videoId);
+  };
+  const truncateText = (text: string, maxLines: number) => {
+    const lineHeight = 1.5; // Approximate line height for truncation
+    const maxHeight = lineHeight * maxLines;
+    return (
+      <div style={{ maxHeight: `${maxHeight}em`, overflow: "hidden" }}>
+        {text}
+      </div>
+    );
+  };
+
+ 
 
   return (
     <div className="p-8">
@@ -34,13 +54,25 @@ const Videos: React.FC<{ videos: Video[] }> = ({ videos }) => {
             onClick={() => handleVideoClick(video)}
           >
             <img
-              src={`/thumbnails/${video.id}.jpg`}
+              src={`/thumbnails/${video.id}.png`}
               alt={video.title}
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
               <h3 className="text-lg font-bold text-gray-800">{video.title}</h3>
-              <p className="text-sm text-gray-600">{video.description}</p>
+              <p className="text-sm text-gray-600">
+              {expandedVideo === video.id
+                  ? video.description
+                  : truncateText(video.description, 2)}
+              </p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleDescription(video.id)}}
+                className="text-sm text-gray-400 hover:text-gray-500"
+              >
+                {expandedVideo === video.id ? "Less" : "More"}
+              </button>
             </div>
           </div>
         ))}
@@ -59,10 +91,13 @@ const Videos: React.FC<{ videos: Video[] }> = ({ videos }) => {
                 &times;
               </button>
             </div>
-            <video className="w-full" controls>
-              <source src={selectedVideo.url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <iframe
+              className="w-full h-64"
+              src={getEmbedUrl(selectedVideo.url)}
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              title={selectedVideo.title}
+            ></iframe>
             <div className="p-4">
               <p>{selectedVideo.description}</p>
             </div>
