@@ -20,7 +20,7 @@ const ProfilePage=async({params}:{params:{username:string}})=>{
         }
       }
     }
-  }) 
+  })
   if (!user) return notFound()
     return(
         <div className='flex gap-6 pt-6'>
