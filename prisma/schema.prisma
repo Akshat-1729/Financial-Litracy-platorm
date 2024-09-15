@@ -99,3 +99,11 @@ model FollowRequest {
 
   @@unique([senderId, receiverId])
 }
+
+model Video {
+  id        String   @id   @map("_id")
+  title     String
+  url       String   // URL to the video
+  description String
+  createdAt DateTime @default(now())
+}
