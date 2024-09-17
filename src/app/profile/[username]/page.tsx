@@ -1,41 +1,56 @@
-import { Feed } from "@/components/Feed"
-import { LeftMenu } from "@/components/leftMenu"
-import { RightMenu } from "@/components/RightMenu"
-import { prisma } from "@/lib/client"
-import Image from "next/image"
-import { notFound } from "next/navigation"
 
-const ProfilePage=async({params}:{params:{username:string}})=>{
-  const username=params.username
-  const user=await prisma.user.findFirst({
-    where:{
+import { Feed } from "@/components/feed/Feed";
+import { LeftMenu } from "@/components/leftMenu/leftMenu";
+import { RightMenu } from "@/components/rightMenu/RightMenu";
+import { prisma } from "@/lib/client";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+const ProfilePage = async ({ params }: { params: { username: string } }) => {
+  const username = params.username;
+  const user = await prisma.user.findFirst({
+    where: {
       username,
     },
-    include:{
-      _count:{
-        select:{
-          followers:true,
-          followings:true,
-          posts:true
-        }
-      }
-    }
-  })
-  if (!user) return notFound()
-    return(
-        <div className='flex gap-6 pt-6'>
+    include: {
+      _count: {
+        select: {
+          followers: true,
+          followings: true,
+          posts: true,
+        },
+      },
+    },
+  });
+  if (!user) return notFound();
+  return (
+    <div className="flex gap-6 pt-6">
       <div className="hidden xl:block w-[20%]">
-        <LeftMenu type="profile"/>
+        <LeftMenu type="profile" />
       </div>
       <div className="w-full lg:w-[70%] xl:w-[50%]">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center justify-center">
             <div className="w-full h-64 relative">
-              <Image src={user.cover||'/bg.jpg'} alt="" fill className="rounded-md object-cover"/>
-              <Image src={user.avatar||'/noAvatar.png'} alt=""  width={128} height={128} className="rounded-full w-32 h-32 absolute left-0 right-0 m-auto -bottom-16 ring-4 ring-white object-cover"/>
-
+              <Image
+                src={user.cover || "/bg.jpg"}
+                alt=""
+                fill
+                className="rounded-md object-cover"
+              />
+              <Image
+                src={user.avatar || "/noAvatar.png"}
+                alt=""
+                width={128}
+                height={128}
+                className="rounded-full w-32 h-32 absolute left-0 right-0 m-auto -bottom-16 ring-4 ring-white object-cover"
+              />
             </div>
-            <h1 className="mt-20 mb-4 text-2xl font-medium">{(user.name && user.surname)?user.name +" "+user.surname:user.username}</h1>
+            <h1 className="mt-20 mb-4 text-2xl font-medium">
+              {user.name && user.surname
+                ? user.name + " " + user.surname
+                : user.username}
+            </h1>
             <div className="flex items-center justify-center gap-12 mb-4">
               <div className="flex flex-col items-center">
                 <span className="font-bold">{user._count.posts}</span>
@@ -51,15 +66,13 @@ const ProfilePage=async({params}:{params:{username:string}})=>{
               </div>
             </div>
           </div>
-          <Feed/>
+          <Feed />
         </div>
       </div>
       <div className="hidden lg:block w-[30%]">
-        <RightMenu user={user}/>
+        <RightMenu user={user} />
       </div>
-
-
     </div>
-    )
-}
-export default ProfilePage
+  );
+};
+export default ProfilePage;

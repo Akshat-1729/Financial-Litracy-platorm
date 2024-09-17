@@ -38,10 +38,12 @@ model User {
   followRequestSent FollowRequest[] @relation("FollowRequestSent")
 
   followRequestsReceived FollowRequest[] @relation("FollowRequestsReceived")
+
+  Expense Expense[]
 }
 
 model Post {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @db.ObjectId @map("_id") 
   desc      String
   img       String?
   createdAt DateTime  @default(now())
@@ -58,18 +60,18 @@ model Scenario {
 }
 
 model Like {
-  id        String   @id @map("_id")
+  id        String   @id @map("_id") @default(auto()) @db.ObjectId
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String?  @db.ObjectId
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String?
+  commentId String? @db.ObjectId
 }
 
 model Comment {
-  id        String   @id @map("_id")
+  id        String   @id @map("_id") @default(auto()) @db.ObjectId
   desc      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,7 +83,7 @@ model Comment {
 }
 
 model Follower {
-  id          String   @id @map("_id")
+  id          String   @id @map("_id") @default(auto()) @db.ObjectId
   createdAt   DateTime @default(now())
   follower    User     @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
   followerId  String
@@ -90,7 +92,7 @@ model Follower {
 }
 
 model FollowRequest {
-  id         String   @id @map("_id")
+  id         String   @id @map("_id") @default(auto()) @db.ObjectId
   createdAt  DateTime @default(now())
   sender     User     @relation("FollowRequestSent", fields: [senderId], references: [id], onDelete: Cascade)
   senderId   String
@@ -106,4 +108,20 @@ model Video {
   url       String   // URL to the video
   description String
   createdAt DateTime @default(now())
+}
+model Expense {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  category  ExpenseCategory
+  amount    Float
+  user      User     @relation(fields: [userId], references: [id], onDelete:Cascade)
+  userId    String
+  date      DateTime @default(now())  
+}
+enum ExpenseCategory {
+  GROCERY
+  PETROL
+  OUTING
+  SHOPPING
+  RENT_Wifi
+  OTHERS
 }

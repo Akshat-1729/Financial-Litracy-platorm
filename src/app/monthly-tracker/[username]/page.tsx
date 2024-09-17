@@ -1,7 +1,7 @@
-import { LeftMenu } from '@/components/leftMenu'
-import React from 'react'
+import { LeftMenu } from "@/components/leftMenu/leftMenu"
 
-const page = () => {
+const page = async ({params}:{params:{username:string}}) => {
+    const username=params.username
   return (
     <div className='flex gap-6 pt-6'>
       <div className="hidden xl:block w-[20%]">

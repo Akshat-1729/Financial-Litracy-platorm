@@ -1,4 +1,4 @@
-import { LeftMenu } from "@/components/leftMenu";
+import { LeftMenu } from "@/components/leftMenu/leftMenu";
 import Videos from "@/components/Videos";
 import { prisma } from "@/lib/client";
  // Import the client-side component
